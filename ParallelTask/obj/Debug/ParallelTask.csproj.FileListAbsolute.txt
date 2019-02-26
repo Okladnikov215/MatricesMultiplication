@@ -1,7 +1,0 @@
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\bin\Debug\ParallelTask.exe.config
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\bin\Debug\ParallelTask.exe
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\bin\Debug\ParallelTask.pdb
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\obj\Debug\ParallelTask.csprojAssemblyReference.cache
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\obj\Debug\ParallelTask.csproj.CoreCompileInputs.cache
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\obj\Debug\ParallelTask.exe
-C:\Users\Fedya\Documents\Visual Studio 2017\Projects\ParallelTask\ParallelTask\obj\Debug\ParallelTask.pdb
