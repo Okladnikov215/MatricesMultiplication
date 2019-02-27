@@ -8,15 +8,17 @@ namespace ParallelTask
         static void Main(string[] args)
         {
             var squareMatrixSide = 400;
-            var A = new Matrix(squareMatrixSide, squareMatrixSide).RandomlyRefillMatrix(-100, 100);
-            var B = new Matrix(squareMatrixSide, squareMatrixSide).RandomlyRefillMatrix();
+            var ARows = squareMatrixSide;
+            var AColumns = squareMatrixSide;
+            var BRows = squareMatrixSide;
+            var BColumns = squareMatrixSide;
 
-            var AB = new Matrix(squareMatrixSide, squareMatrixSide);
+            var A = new Matrix(ARows, AColumns).RandomlyRefillMatrix();
+            var B = new Matrix(BRows, BColumns).RandomlyRefillMatrix(-100, 100);
 
             Matrix nonParallelMult(Matrix M1, Matrix M2) => M1 * M2;
             Matrix parallelMultWithFor(Matrix M1, Matrix M2) => Matrix.ParallelMultiplyWithFor(M1, M2);
             Matrix parallelMultWithTask(Matrix M1, Matrix M2) => Matrix.ParallelMultiplyWithTask(M1, M2);
-
 
             var nonParallelTime = TimeCheckMatrixMultiplication(nonParallelMult, A, B);
             var minTime = nonParallelTime;
