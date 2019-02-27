@@ -140,12 +140,15 @@ namespace ParallelTask
                 multiplyingTasks[i] = new Task(() =>
                 {
                     for (int r = rStart; r < rEnd; r++)
-                        for (int c = 0; c < ABColumnsCount; c++)
+                    {
+                        for (int k = 0; k < AColumnsCount; k++)
                         {
-                            var row = A.GetRow(r);
-                            var column = B.GetColumn(c);
-                            AB[r, c] = (row * column)[0, 0];
+                            for (int c = 0; c < ABColumnsCount; c++)
+                            {
+                                AB[r, c] += A[r, k] * B[k, c];
+                            }
                         }
+                    }
                 });
             }
 
@@ -214,40 +217,6 @@ namespace ParallelTask
             });
 
             return AB;
-        }
-
-        /// <summary>
-        /// Get a column from a matrix
-        /// </summary>
-        /// <param name="j"> Column number </param>
-        /// <returns> Matrix with 1 desired column </returns>
-        private Matrix GetColumn(int j)
-        {
-            var column = new Matrix(RowsCount, 1);
-
-            for (int i = 0; i < RowsCount; i++)
-            {
-                column[i, 0] = this[i, j];
-            }
-
-            return column;
-        }
-
-        /// <summary>
-        /// Gets a row from a matrix
-        /// </summary>
-        /// <param name="i"> Row number </param>
-        /// <returns> Matrix with 1 desired row </returns>
-        private Matrix GetRow(int i)
-        {
-            var row = new Matrix(1, ColumnsCount);
-
-            for (int j = 0; j < ColumnsCount; j++)
-            {
-                row[0, j] = this[i, j];
-            }
-
-            return row;
         }
 
         public override string ToString()
