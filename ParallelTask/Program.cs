@@ -15,16 +15,15 @@ namespace ParallelTask
 
             Matrix nonParallelMult(Matrix M1, Matrix M2) => M1 * M2;
             Matrix parallelMultWithFor(Matrix M1, Matrix M2) => Matrix.ParallelMultiplyWithFor(M1, M2);
-            Matrix badParallelMultWithTask(Matrix M1, Matrix M2) => Matrix.BadParallelMultiplyWithTask(M1, M2);
             Matrix parallelMultWithTask(Matrix M1, Matrix M2) => Matrix.ParallelMultiplyWithTask(M1, M2);
 
 
             var nonParallelTime = TimeCheckMatrixMultiplication(nonParallelMult, squareMatrixSide, A, B, out AB);
             var minTime = nonParallelTime;
+
             var parallelForTime = TimeCheckMatrixMultiplication(parallelMultWithFor, squareMatrixSide, A, B, out AB);
             minTime = Math.Min(minTime, parallelForTime);
-            var badParallelTaskTime = TimeCheckMatrixMultiplication(badParallelMultWithTask, squareMatrixSide, A, B, out AB);
-            minTime = Math.Min(minTime, badParallelTaskTime);
+
             var parallelTaskTime = TimeCheckMatrixMultiplication(parallelMultWithTask, squareMatrixSide, A, B, out AB);
             minTime = Math.Min(minTime, parallelTaskTime);
 

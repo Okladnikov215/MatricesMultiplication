@@ -217,56 +217,6 @@ namespace ParallelTask
         }
 
         /// <summary>
-        /// Creates N*M tasks for NxK and KxM matrices to multiply matrices A and B.
-        /// Works worse than not parallel version
-        /// </summary>
-        /// <param name="A"> Left matrix </param>
-        /// <param name="B"> Right matrix </param>
-        /// <returns> Result of multiplication </returns>
-        public static Matrix BadParallelMultiplyWithTask(Matrix A, Matrix B)
-        {
-            var AColumnsCount = A.columnsCount;
-
-            if (AColumnsCount != B.rowsCount)
-            {
-                throw new ArgumentException("This matrices have incorrect sizes and can't be multiplied");
-            }
-
-            var ABRowsCount = A.rowsCount;
-            var ABColumnsCount = B.columnsCount;
-            var AB = new Matrix(ABRowsCount, ABColumnsCount);
-
-            var multiplyingTasks = new Task[ABRowsCount, ABColumnsCount];
-
-            for (int i = 0; i < ABRowsCount; i++)
-            {
-                for (int j = 0; j < ABColumnsCount; j++)
-                {
-                    var iLocal = i;
-                    var jLocal = j;
-                    var row = A.GetRow(iLocal);
-                    var column = B.GetColumn(jLocal);
-                    multiplyingTasks[iLocal, jLocal] = new Task(() =>
-                    {
-                        AB[iLocal, jLocal] = (row * column)[0, 0];
-                    });
-                }
-            }
-
-            foreach (var task in multiplyingTasks)
-            {
-                task.Start();
-            }
-
-            foreach (var task in multiplyingTasks)
-            {
-                task.Wait();
-            }
-
-            return AB;
-        }
-
-        /// <summary>
         /// Get a column from a matrix
         /// </summary>
         /// <param name="j"> Column number </param>
