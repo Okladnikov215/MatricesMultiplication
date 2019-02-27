@@ -18,28 +18,41 @@ namespace ParallelTask
             Matrix parallelMultWithTask(Matrix M1, Matrix M2) => Matrix.ParallelMultiplyWithTask(M1, M2);
 
 
-            var nonParallelTime = TimeCheckMatrixMultiplication(nonParallelMult, squareMatrixSide, A, B, out AB);
+            var nonParallelTime = TimeCheckMatrixMultiplication(nonParallelMult, A, B);
             var minTime = nonParallelTime;
 
-            var parallelForTime = TimeCheckMatrixMultiplication(parallelMultWithFor, squareMatrixSide, A, B, out AB);
+            var parallelForTime = TimeCheckMatrixMultiplication(parallelMultWithFor, A, B);
             minTime = Math.Min(minTime, parallelForTime);
 
-            var parallelTaskTime = TimeCheckMatrixMultiplication(parallelMultWithTask, squareMatrixSide, A, B, out AB);
+            var parallelTaskTime = TimeCheckMatrixMultiplication(parallelMultWithTask, A, B);
             minTime = Math.Min(minTime, parallelTaskTime);
 
             Console.WriteLine("Maximum boost is ~{0:0.00}% with {1} processors detected", 100 - minTime / nonParallelTime * 100, Environment.ProcessorCount);
         }
 
-        private static double TimeCheckMatrixMultiplication(Func<Matrix, Matrix, Matrix> mult, int squareMatrixSide, Matrix A, Matrix B, out Matrix AB)
+        /// <summary>
+        /// Multiplies matrices A and B using passed function mult and returns spent time
+        /// </summary>
+        /// <param name="mult"> Function which defines how matrices are multiplied</param>
+        /// <param name="A"> Left matrix </param>
+        /// <param name="B"> Right matrix </param>
+        /// <returns> Time spent in seconds </returns>
+        private static double TimeCheckMatrixMultiplication(Func<Matrix, Matrix, Matrix> mult, Matrix A, Matrix B)
         {
             var methodName = mult.Method.Name;
-
+            var ARows = A.RowsCount;
+            var AColumns = A.ColumnsCount;
+            var BRows = B.RowsCount;
+            var BColumns = B.ColumnsCount;
             var sw = new Stopwatch();
-            Console.WriteLine("Begin {1} for Square Matrices {0}x{0}", squareMatrixSide, methodName);
+            Console.WriteLine("Begin {4} for Matrices {0}x{1} and {2}x{3}", ARows, AColumns, BRows, BColumns, methodName);
+            var AB = new Matrix(ARows, BColumns);
             GC.Collect();
+
             sw.Start();
             AB = mult(A, B);
             sw.Stop();
+
             var swTime = sw.Elapsed.TotalSeconds;
             Console.WriteLine("Time elapsed: " + swTime + "\n");
             return swTime;

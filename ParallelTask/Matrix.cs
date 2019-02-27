@@ -7,8 +7,8 @@ namespace ParallelTask
     public class Matrix
     {
         private double[,] innerMatrix;
-        private int rowsCount;
-        private int columnsCount;
+        public int RowsCount { get; private set; }
+        public int ColumnsCount { get; private set; }
 
         public Matrix(int rowsCount, int columnsCount)
         {
@@ -17,8 +17,8 @@ namespace ParallelTask
                 throw new ArgumentException("Matrix must have at least 1 row and 1 column");
             }
 
-            this.rowsCount = rowsCount;
-            this.columnsCount = columnsCount;
+            this.RowsCount = rowsCount;
+            this.ColumnsCount = columnsCount;
             innerMatrix = new double[rowsCount, columnsCount];
         }
 
@@ -32,8 +32,8 @@ namespace ParallelTask
                 throw new ArgumentException("Matrix must have at least 1 row and 1 column");
             }
 
-            this.rowsCount = rowsCount;
-            this.columnsCount = columnsCount;
+            this.RowsCount = rowsCount;
+            this.ColumnsCount = columnsCount;
             innerMatrix = new double[rowsCount, columnsCount];
 
             for (int i = 0; i < rowsCount; i++)
@@ -49,7 +49,7 @@ namespace ParallelTask
         {
             get
             {
-                if (i >= this.rowsCount || j >= this.columnsCount)
+                if (i >= this.RowsCount || j >= this.ColumnsCount)
                 {
                     throw new IndexOutOfRangeException();
                 }
@@ -59,7 +59,7 @@ namespace ParallelTask
 
             set
             {
-                if (i >= this.rowsCount || j >= this.columnsCount)
+                if (i >= this.RowsCount || j >= this.ColumnsCount)
                 {
                     throw new IndexOutOfRangeException();
                 }
@@ -76,15 +76,15 @@ namespace ParallelTask
         /// <returns> Result of multiplication </returns>
         public static Matrix operator *(Matrix A, Matrix B)
         {
-            var AColumnsCount = A.columnsCount;
+            var AColumnsCount = A.ColumnsCount;
 
-            if (AColumnsCount != B.rowsCount)
+            if (AColumnsCount != B.RowsCount)
             {
                 throw new ArgumentException("This matrices have incorrect sizes and can't be multiplied");
             }
 
-            var ABRowsCount = A.rowsCount;
-            var ABColumnsCount = B.columnsCount;
+            var ABRowsCount = A.RowsCount;
+            var ABColumnsCount = B.ColumnsCount;
             var AB = new Matrix(ABRowsCount, ABColumnsCount);
 
             for (int i = 0; i < ABRowsCount; i++)
@@ -110,19 +110,19 @@ namespace ParallelTask
         /// <returns> Result of multiplication </returns>
         public static Matrix ParallelMultiplyWithTask(Matrix A, Matrix B)
         {
-            var AColumnsCount = A.columnsCount;
+            var AColumnsCount = A.ColumnsCount;
 
-            if (AColumnsCount != B.rowsCount)
+            if (AColumnsCount != B.RowsCount)
             {
                 throw new ArgumentException("This matrices have incorrect sizes and can't be multiplied");
             }
 
-            var ABRowsCount = A.rowsCount;
-            var ABColumnsCount = B.columnsCount;
+            var ABRowsCount = A.RowsCount;
+            var ABColumnsCount = B.ColumnsCount;
             var AB = new Matrix(ABRowsCount, ABColumnsCount);
 
             var tasksCount = Environment.ProcessorCount;
-            var taskRows = AB.rowsCount / tasksCount;
+            var taskRows = AB.RowsCount / tasksCount;
 
 
             var multiplyingTasks = new Task[tasksCount];
@@ -134,7 +134,7 @@ namespace ParallelTask
 
                 if (i == tasksCount - 1)
                 {
-                    rEnd += AB.rowsCount % tasksCount;
+                    rEnd += AB.RowsCount % tasksCount;
                 }
 
                 multiplyingTasks[i] = new Task(() =>
@@ -170,11 +170,11 @@ namespace ParallelTask
         /// <returns> Matrix with all numbers randomized </returns>
         public Matrix RandomlyRefillMatrix(double minNumber = 0, double maxNumber = 1)
         {
-            var randomizedMatrix = new Matrix(rowsCount, columnsCount);
+            var randomizedMatrix = new Matrix(RowsCount, ColumnsCount);
             var rngGen = new Random();
-            for (int i = 0; i < this.rowsCount; i++)
+            for (int i = 0; i < this.RowsCount; i++)
             {
-                for (int j = 0; j < this.columnsCount; j++)
+                for (int j = 0; j < this.ColumnsCount; j++)
                 {
                     randomizedMatrix[i, j] = rngGen.NextDouble() * (maxNumber - minNumber) + minNumber;
                 }
@@ -191,15 +191,15 @@ namespace ParallelTask
         /// <returns> Result of multiplication </returns>
         public static Matrix ParallelMultiplyWithFor(Matrix A, Matrix B)
         {
-            var AColumnsCount = A.columnsCount;
+            var AColumnsCount = A.ColumnsCount;
 
-            if (AColumnsCount != B.rowsCount)
+            if (AColumnsCount != B.RowsCount)
             {
                 throw new ArgumentException("This matrices have incorrect sizes and can't be multiplied");
             }
 
-            var ABRowsCount = A.rowsCount;
-            var ABColumnsCount = B.columnsCount;
+            var ABRowsCount = A.RowsCount;
+            var ABColumnsCount = B.ColumnsCount;
             var AB = new Matrix(ABRowsCount, ABColumnsCount);
 
             Parallel.For(0, ABRowsCount, i =>
@@ -223,9 +223,9 @@ namespace ParallelTask
         /// <returns> Matrix with 1 desired column </returns>
         private Matrix GetColumn(int j)
         {
-            var column = new Matrix(rowsCount, 1);
+            var column = new Matrix(RowsCount, 1);
 
-            for (int i = 0; i < rowsCount; i++)
+            for (int i = 0; i < RowsCount; i++)
             {
                 column[i, 0] = this[i, j];
             }
@@ -240,9 +240,9 @@ namespace ParallelTask
         /// <returns> Matrix with 1 desired row </returns>
         private Matrix GetRow(int i)
         {
-            var row = new Matrix(1, columnsCount);
+            var row = new Matrix(1, ColumnsCount);
 
-            for (int j = 0; j < columnsCount; j++)
+            for (int j = 0; j < ColumnsCount; j++)
             {
                 row[0, j] = this[i, j];
             }
@@ -254,9 +254,9 @@ namespace ParallelTask
         {
             var matrixStringBuilder = new StringBuilder();
 
-            for (int i = 0; i < this.rowsCount; i++)
+            for (int i = 0; i < this.RowsCount; i++)
             {
-                for (int j = 0; j < this.columnsCount; j++)
+                for (int j = 0; j < this.ColumnsCount; j++)
                 {
                     var appendString = string.Format("{0:0.00} ", innerMatrix[i, j]);
                     matrixStringBuilder.Append(appendString);
